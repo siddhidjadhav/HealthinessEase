@@ -11,6 +11,7 @@
     - Here env is the name of the virtual environment
 - Now install all the project dependencies 
   - use command - "pip install -r requirements.txt"
+- For local development, create a `.env` file in the project root with `DB_ENGINE=sqlite`. Django then uses a local SQLite database. Without that setting, the app connects to the configured Postgres server. Apply migrations with `python manage.py migrate`.
 - Now configure the IDE to use the interpreter present inside the virtual environment
   - Steps for VSCode : -
    

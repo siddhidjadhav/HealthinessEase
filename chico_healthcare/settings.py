@@ -12,12 +12,14 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 SECRET_KEY = "django-insecure-$zx1%u+tgkp---8n#c7l(%b(w__^_@v57a&vl-m$1b7u4gm=lj"
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
@@ -88,18 +90,26 @@ WSGI_APPLICATION = 'chico_healthcare.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'my_django_db',
-        'USER': 'my_django_user',
-        'PASSWORD': 'healthease@1234',
-        'HOST': '34.69.76.245',
-        'PORT': 5432
+# Remote Postgres remains the default. Set DB_ENGINE=sqlite in .env for local development
+# when that database is not reachable.
+if os.environ.get("DB_ENGINE") == "sqlite":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME', 'my_django_db'),
+            'USER': os.environ.get('DB_USER', 'my_django_user'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'healthease@1234'),
+            'HOST': os.environ.get('DB_HOST', '34.69.76.245'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
+        }
+    }
 
 
 
